@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Similar Products</title>
+</head>
+<body>
+    <h1>Similar Products</h1>
+    <ul>
+        {% for similar_product in similar_products %}
+        <li>
+            <h2>{{ similar_product[0] }}</h2>
+            <p>Image: <img src="{{ similar_product[1] }}" alt="{{ similar_product[0] }}" width="100"></p>
+            <p>Link: <a href="{{ similar_product[2] }}" target="_blank">{{ similar_product[2] }}</a></p>
+        </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>

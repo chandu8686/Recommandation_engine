@@ -1,0 +1,40 @@
+version: "3.0"
+services:
+  elasticsearch:
+    container_name: esearch-container
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.11.0
+    environment:
+      - xpack.security.enabled=false
+      - "discovery.type=single-node"
+    networks:
+      - es-net
+    ports:
+      - 9200:9200
+  kibana:
+    container_name: kibana-container
+    image: docker.elastic.co/kibana/kibana:7.11.0
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch-dev:9200
+    networks:
+      - es-net
+    depends_on:
+      - elasticsearch
+    ports:
+      - 5601:5601
+
+  web:
+    build: ./web
+    restart: always
+    container_name: web-dev
+    ports:
+      - 5000:5000
+    environment:
+      PYTHONUNBUFFERED: 0
+      ELASTICSEARCH_HOSTS: "http://elasticsearch-dev:9200"  # Use ELASTICSEARCH_HOSTS here
+    depends_on:
+      - elasticsearch
+
+
+networks:
+  es-net:
+    driver: bridge

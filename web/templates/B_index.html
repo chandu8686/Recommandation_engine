@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        Recommandation Engines</title>
+        <link rel="icon" href="{{ url_for('static', filename='techouts.svg') }}" type="image/x-icon">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-black">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <img src="{{ url_for('static', filename='techouts.svg') }}" alt="Logo" height="30">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+        </div>
+    </nav>
+    <div class="container mt-4">
+        <h3 class="mb-4">Search</h3>
+        <div class="row mb-4">
+            <div class="col">
+                <form id="search-form">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="search-input" placeholder="Search for products...">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col" id="search-results"></div>
+        </div>
+        
+        <div class="row mb-4">
+            <div class="col" id="category-results"></div>
+        </div>
+        
+        <div class="row mb-4">
+            <h4 class="mb-4">User Category</h4>
+            <div class="col">
+                <form id="user-recommendation-form">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="user-id-input" placeholder="Enter User ID...">
+                        <button type="submit" class="btn btn-primary">Get Recommendations</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col" id="user-recommendations"></div>
+        </div>
+        
+        <div class="row mb-4">
+            <h4 class="mb-4">User Products</h4>
+            <div class="col">
+                <form id="user-product-recommendation-form">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="user-id-input" placeholder="Enter User ID...">
+                        <button type="submit" class="btn btn-primary">Get Recommended Products</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col" id="user-recommended-products"></div>
+        </div>
+        
+        <div class="row mb-4">
+            <div class="col">
+                <h3>Similar Products</h3>
+                <form id="similar-products-form">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="sku-input" placeholder="Enter SKU...">
+                        <button type="submit" class="btn btn-primary">Get Similar Products</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row mb-4">
+            <div class="col" id="similar-products-results"></div>
+        </div>
+        
+        <div class="row mb-4">
+            <h4>Customer Brought recommandations Products</h4>
+            <div class="col">
+                <form id="recommended-products-form">
+                    <div class="input-group">
+                        <input type="text" class="form-control" id="customer-id-input" placeholder="Enter Customer ID...">
+                        <button type="submit" class="btn btn-primary">Brought Recommandation</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col" id="recommended-products-results"></div>
+        </div>
+        <div class="container mt-4">
+            <h1>Product Search</h1>
+            <button id="trending-brands-button" class="btn btn-primary">Trending Brands</button>
+            <button id="popular-brands-button" class="btn btn-primary ml-2">Popular Brands</button>
+            <div id="brands-results" class="mt-3"></div>
+        </div>
+        <button id="trending-products-button" class="btn btn-primary">Trending Products</button>
+        <div class="row mt-3" id="products-results"></div>
+    </div>
+    <div class="container mt-4">
+        <h1>Wishlist Recommended Products</h1>
+        <form id="wishlist-form">
+            <div class="mb-3">
+                <label for="customer-id-inputs" class="form-label">Enter Customer ID:</label>
+                <input type="text" class="form-control" id="customer-id-inputs" placeholder="Customer ID">
+            </div>
+            <button type="submit" class="btn btn-primary">Get Wishlist Products</button>
+        </form>
+        <div class="row mt-4" id="wishlist-results"></div>
+    </div>
+
+    <script>
+        const trendingBrandsButton = document.getElementById('trending-brands-button');
+        const popularBrandsButton = document.getElementById('popular-brands-button');
+        const brandsResults = document.getElementById('brands-results');
+
+        const trendingProductsButton = document.getElementById('trending-products-button');
+        const productsResults = document.getElementById('products-results');
+
+        
+        trendingProductsButton.addEventListener('click', () => {
+            fetchTrendingProducts();
+        });
+
+        async function fetchTrendingProducts() {
+            try {
+                const response = await fetch('/get_trending_products');
+                const data = await response.json();
+                displayProducts(data.trending_products);
+            } catch (error) {
+                console.error('Error fetching trending products:', error);
+            }
+        }
+        function displayProducts(products) {
+            const productsList = products.map(product => `
+                <div class="col-md-4 mb-4">
+                    <div class="card">
+                        <img src="${product.image_link}" class="card-img-top" alt="${product.title}">
+                        <div class="card-body">
+                            <h5 class="card-title">${product.title}</h5>
+                            <p class="card-text">Price: $${product.price}</p>
+                            <p class="card-text">Sale Price: $${product.sale_price}</p>
+                            <p class="card-text">Brand: ${product.brand}</p>
+                            <p class="card-text">Color: ${product.color}</p>
+                            <p class="card-text">Category: ${product.category}</p>
+                            <p class="card-text">Subcategory: ${product.subcategory}</p>
+                            <p class="card-text">Main Category: ${product.maincategory}</p>
+                            <a href="${product.link}" class="btn btn-primary" target="_blank">Product Link</a>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+
+            productsResults.innerHTML = productsList;
+        }
+
+
+        trendingBrandsButton.addEventListener('click', () => {
+            fetchTrendingBrands();
+        });
+
+        popularBrandsButton.addEventListener('click', () => {
+            fetchPopularBrands();
+        });
+
+        async function fetchTrendingBrands() {
+            try {
+                const response = await fetch('/get_trending_brands');
+                const data = await response.json();
+                displayBrands(data.trending_brands, 'Trending Brands');
+            } catch (error) {
+                console.error('Error fetching trending brands:', error);
+            }
+        }
+
+        async function fetchPopularBrands() {
+            try {
+                const response = await fetch('/get_popular_brands');
+                const data = await response.json();
+                displayBrands(data.popular_brands, 'Popular Brands');
+            } catch (error) {
+                console.error('Error fetching popular brands:', error);
+            }
+        }
+
+        function displayBrands(brands, label) {
+            const brandsList = brands.map(brand => `<li class="list-group-item">${brand}</li>`).join('');
+            const brandsContent = `
+                <h2>${label}</h2>
+                <ul class="list-group">${brandsList}</ul>
+            `;
+            brandsResults.innerHTML = brandsContent;
+        }
+    </script>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Search</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+</head>
+<body>
+    <div class="container mt-4">
+        <h1 class="mb-4">Product Search</h1>
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3" id="product-results">
+            <!-- Product cards will be dynamically added here -->
+        </div>
+    </div>
+
+    <script>
+        // Sample data for demonstration
+        const products = [
+            {
+                sku: '12345',
+                product_name: 'Product 1',
+                price: '$49.99',
+                brand: 'Brand A',
+                color: 'Blue',
+                image: 'https://via.placeholder.com/150',
+                link: 'https://example.com/product1'
+            },
+            {
+                sku: '67890',
+                product_name: 'Product 2',
+                price: '$39.99',
+                brand: 'Brand B',
+                color: 'Red',
+                image: 'https://via.placeholder.com/150',
+                link: 'https://example.com/product2'
+            }
+            // Add more products as needed
+        ];
+
+        // Loop through products and generate HTML content
+        let htmlContent = '';
+        products.forEach(product => {
+            htmlContent += `
+                <div class="col mb-4">
+                    <div class="card h-100">
+                        <img src="${product.image}" class="card-img-top" alt="${product.product_name}">
+                        <div class="card-body">
+                            <h5 class="card-title">${product.product_name}</h5>
+                            <p class="card-text">SKU: ${product.sku}</p>
+                            <p class="card-text">Price: ${product.price}</p>
+                            <p class="card-text">Brand: ${product.brand}</p>
+                            <p class="card-text">Color: ${product.color}</p>
+                            <a href="${product.link}" class="btn btn-primary btn-sm" target="_blank">Product Link</a>
+                        </div>
+                    </div>
+                </div>`;
+        });
+
+        // Inject the generated HTML content into the product-results div
+        document.getElementById('product-results').innerHTML = htmlContent;
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C

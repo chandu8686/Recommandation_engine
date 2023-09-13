@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Search</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+</head>
+<body>
+    <h1>Product Search</h1>
+    <form id="search-form">
+        <input type="text" id="search-input" placeholder="Search for products...">
+        <button type="submit">Search</button>
+    </form>
+    <div id="search-results"></div>
+
+<div id="category-results"></div>
+
+<form id="user-recommendation-form">
+    <input type="text" id="user-id-input" placeholder="Enter User ID...">
+    <button type="submit">Get Recommendations</button>
+</form>
+<div id="user-recommendations"></div>
+
+<form id="user-product-recommendation-form">
+    <input type="text" id="user-id-input" placeholder="Enter User ID...">
+    <button type="submit">Get Recommended Products</button>
+</form>
+<div id="user-recommended-products"></div>
+
+<h2>Fetch Similar Products</h2>
+    <form id="similar-products-form">
+        <input type="text" id="sku-input" placeholder="Enter SKU...">
+        <button type="submit">Get Similar Products</button>
+    </form>
+    <div id="similar-products-results"></div>
+
+    <form id="recommended-products-form">
+        <input type="text" id="customer-id-input" placeholder="Enter Customer ID">
+        <button type="submit">Get Recommended Products</button>
+    </form>
+    
+    <div id="recommended-products-results"></div>
+
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
